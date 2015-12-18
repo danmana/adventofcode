@@ -21,15 +21,12 @@ for s in data:
     nodes.add(a)
     nodes.add(b)
 
-    edges[(a,b)] = val
+    edges[(a, b)] = val
 
 
-n = len(nodes)
-path = [None for i in range(n)]
-maxDist = -999999999
+def dist(i, j):
+    return edges[(i, j)] + edges[(j, i)]
 
-def dist(i,j):
-    return edges[(i,j)] + edges[(j,i)]
 
 def backtrace(i, d):
     global path
@@ -37,7 +34,7 @@ def backtrace(i, d):
 
     # found a solution
     if i == n:
-        d += dist(path[0],path[n-1])
+        d += dist(path[0], path[n - 1])
         if d > maxDist:
             maxDist = d
         return
@@ -45,13 +42,31 @@ def backtrace(i, d):
     for v in nodes:
         if not v in path:
             path[i] = v
-            backtrace(i+1, d + dist(path[i-1],v))
+            backtrace(i + 1, d + dist(path[i - 1], v))
 
     path[i] = None
 
+
+n = len(nodes)
+path = [None for i in range(n)]
+maxDist = -999999999
+for i in nodes:
+    path[0] = i
+    backtrace(1, 0)
+
+print('Without you', maxDist)
+
+n = len(nodes) + 1
+path = [None for i in range(n)]
+maxDist = -999999999
+for i in nodes:
+    edges[('You', i)] = 0
+    edges[(i, 'You')] = 0
+
+nodes.add('You')
 
 for i in nodes:
     path[0] = i
     backtrace(1, 0)
 
-print maxDist
+print('With you', maxDist)
