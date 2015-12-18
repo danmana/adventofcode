@@ -1,5 +1,4 @@
 import re
-from collections import namedtuple
 
 with open("inputs/day15.txt", "r") as file:
     data = file.readlines()
@@ -7,7 +6,7 @@ with open("inputs/day15.txt", "r") as file:
 
 class Ingredient(object):
     __line = re.compile(
-        '(\w+): capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (-?\d+)')
+            '(\w+): capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (-?\d+)')
 
     def __init__(self, s):
         m = Ingredient.__line.search(s)
@@ -33,12 +32,13 @@ n = len(data)
 cookie = [None for i in range(n)]
 
 maxScore = 0
+maxScoreWithCal = 0
 
 
 def getScore():
     score = Ingredient('')
 
-    for i in range(0, n):
+    for i in range(n):
         amount = cookie[i]
         ingredient = ingredients[i]
         score.capacity += amount * ingredient.capacity
@@ -49,15 +49,28 @@ def getScore():
     return max(0, score.capacity) * max(0, score.durability) * max(0, score.flavor) * max(0, score.texture)
 
 
+def getCalories():
+    cal = 0
+    for i in range(n):
+        amount = cookie[i]
+        ingredient = ingredients[i]
+        cal += amount * ingredient.calories
+    return cal
+
+
 def backtrace(i, volume):
-    global maxScore
     global cookie
+    global maxScore
+    global maxScoreWithCal
 
     if i == n:
         if volume == 100:
+            cal = getCalories()
             score = getScore()
             if score > maxScore:
                 maxScore = score
+            if cal == 500 and score > maxScoreWithCal:
+                maxScoreWithCal = score
         return
 
     for amount in range(0, 100 - volume + 1):
@@ -68,4 +81,5 @@ def backtrace(i, volume):
 
 backtrace(0, 0)
 
-print maxScore
+print('Max', maxScore)
+print('Max with 500 cal', maxScoreWithCal)
