@@ -3,21 +3,18 @@ import re
 with open("inputs/day07.txt", "r") as file:
     data = file.readlines()
 
-wires = {}
+instr = re.compile('^(.+) -> (\w+)$', re.IGNORECASE)
 
-instr = re.compile('^(.+) -> (\w+)$',re.IGNORECASE)
+number = re.compile('^(\d+)$', re.IGNORECASE)
+assign = re.compile('^(\w+)$', re.IGNORECASE)
+notOp = re.compile('^NOT (\w+)$', re.IGNORECASE)
+multiOp = re.compile('^(\w+) (\w+) (\w+)$', re.IGNORECASE)
 
-number = re.compile('^(\d+)$',re.IGNORECASE)
-assign = re.compile('^(\w+)$',re.IGNORECASE)
-notOp = re.compile('^NOT (\w+)$',re.IGNORECASE)
-multiOp = re.compile('^(\w+) (\w+) (\w+)$',re.IGNORECASE)
 
 def preProcessLine(s):
     m = instr.search(s)
     wires[m.group(2)] = m.group(1)
 
-for s in data:
-    preProcessLine(s)
 
 
 def getVal(w):
@@ -64,5 +61,15 @@ def getVal(w):
         return val
 
 
+wires = {}
+for s in data:
+    preProcessLine(s)
+a = getVal('a')
+print(a)
 
-print getVal('a');
+wires = {}
+for s in data:
+    preProcessLine(s)
+wires['b'] = a
+a = getVal('a')
+print(a)
