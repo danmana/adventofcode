@@ -3,6 +3,14 @@ with open("inputs/day18.txt", "r") as file:
 
 n = len(data)
 grid = [[True if c == '#' else False for c in s] for s in data]
+mode = 'part1'
+
+
+def brokenGrid(grid):
+    grid[0][0] = True
+    grid[0][n - 1] = True
+    grid[n - 1][0] = True
+    grid[n - 1][n - 1] = True
 
 
 def neighboursInLine(line, i):
@@ -50,3 +58,14 @@ for i in range(100):
 on = sum(map(sum, grid))
 
 print('Part 1', on)
+
+grid = [[True if c == '#' else False for c in s] for s in data]
+brokenGrid(grid)
+
+for i in range(100):
+    grid = nextGrid(grid)
+    brokenGrid(grid)
+
+on = sum(map(sum, grid))
+
+print('Part 2', on)
