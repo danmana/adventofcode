@@ -5,21 +5,28 @@ with open("inputs/day12.txt", "r") as file:
 
 obj = json.loads(data)
 
-n = 0
+
+def isRed(obj):
+    for x in obj:
+        if obj[x] == 'red':
+            return True
+    return False
 
 
-def process(obj):
-    global n
+def process(obj, excludeRed):
+    n = 0
 
     if isinstance(obj, int):
         n += obj
     elif isinstance(obj, list):
         for x in obj:
-            process(x)
+            n += process(x, excludeRed)
     elif isinstance(obj, dict):
-        for x in obj:
-            process(obj[x])
+        if not excludeRed or not isRed(obj):
+            for x in obj:
+                n += process(obj[x], excludeRed)
+    return n
 
-process(obj)
 
-print n
+print('All', process(obj, False))
+print('Excluding red', process(obj, True))
