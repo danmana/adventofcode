@@ -8,9 +8,9 @@ line = re.compile('(\w+) can fly (\d+) km/s for (\d+) seconds, but then must res
 
 time = 2503
 
-Raindeer = namedtuple('Raineer', 'name distance')
+Raindeer = namedtuple('Raineer', 'name speed stamina rest period distance')
 
-max = Raindeer(None, 0)
+raindeer = []
 
 for s in data:
     m = line.search(s)
@@ -23,10 +23,26 @@ for s in data:
 
     distance = int(time / period) * speed * stamina + min(stamina, (time % period)) * speed
 
-    if (distance > max.distance):
-        max = Raindeer(name,distance)
+    raindeer.append(Raindeer(name, speed, stamina, rest, period, distance))
 
-print max
+raindeer = sorted(raindeer, key=lambda r: r.distance, reverse=True)
 
+print('By Distance', raindeer[0].distance)
 
+n = len(raindeer)
+dist = [0] * n
+scores = [0] * n
 
+for t in range(2503):
+    maxDist = 0
+    for i in range(n):
+        r = raindeer[i]
+        if t % r.period < r.stamina:
+            dist[i] += r.speed
+        if dist[i] > maxDist:
+            maxDist = dist[i]
+    for i in range(n):
+        if dist[i] == maxDist:
+            scores[i] += 1
+
+print('By score', sorted(scores, reverse=True)[0])
