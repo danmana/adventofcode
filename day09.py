@@ -14,31 +14,30 @@ for s in data:
     b = m.group(2)
     nodes.add(a)
     nodes.add(b)
-    edges[(a,b)] = edges[(b,a)] =int(m.group(3))
+    edges[(a, b)] = edges[(b, a)] = int(m.group(3))
 
 n = len(nodes)
-path = [None for i in range(0,n)]
+path = [None for i in range(0, n)]
 minDist = 999999999
+maxDist = 0
 
 
 def backtrace(i, d):
     global path
     global minDist
-
-    # there is no point in going on this path any further, we already exceeded the best so far
-    if d > minDist:
-        return
+    global maxDist
 
     # found a solution
     if i == n:
-        minDist = d
+        minDist = min(d, minDist)
+        maxDist = max(d, maxDist)
         return
 
     for v in nodes:
-        e = (path[i-1],v)
+        e = (path[i - 1], v)
         if (not v in path) and e in edges:
             path[i] = v
-            backtrace(i+1, d + edges[e])
+            backtrace(i + 1, d + edges[e])
 
     path[i] = None
 
@@ -47,38 +46,5 @@ for i in nodes:
     path[0] = i
     backtrace(1, 0)
 
-print minDist
-
-
-
-
-
-
-
-
-
-# dist = {}
-# def floydWarshall():
-#     for i in nodes:
-#         for j in nodes:
-#             if i == j:
-#                 dist[(i,j)] = 0
-#             elif (i,j) in edges:
-#                 dist[(i,j)] = edges[(i,j)]
-#             else:
-#                 dist[(i,j)] = 9999999;
-#     for k in nodes:
-#         for i in nodes:
-#             for j in nodes:
-#                 d = dist[(i,k)] + dist[(k,j)]
-#                 if dist[(i,j)] > d:
-#                     dist[(i,j)] = d
-#
-# floydWarshall()
-#
-# min = dist.keys()[0]
-#
-# for (i,j) in dist:
-#     if i != j and dist[(i,j)] < dist[min]:
-#         min = (i,j)
-# print dist[min];
+print('Min', minDist)
+print('Max', maxDist)
