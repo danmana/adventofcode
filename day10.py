@@ -1,12 +1,11 @@
-import re
-
 s = "1113222113"
+
 
 def lookAndSay(s):
     s2 = ""
     n = 1
     ch = s[0]
-    for i in range(1,len(s)):
+    for i in range(1, len(s)):
         if s[i] == ch:
             n += 1
         else:
@@ -16,7 +15,12 @@ def lookAndSay(s):
     s2 += str(n) + ch
     return s2
 
-for i in range(0,40):
+
+for i in range(40):
     s = lookAndSay(s);
 
-print len(s)
+print('40 times', len(s))
+
+for i in range(10):
+    s = lookAndSay(s);
+print('50 times', len(s))
