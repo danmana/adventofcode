@@ -12,5 +12,5 @@ for i in range(len(data)):
     if basement is None and level == -1:
         basement = i + 1
 
-print 'Level', level
-print 'Basement', basement
+print('Level', level)
+print('Basement', basement)

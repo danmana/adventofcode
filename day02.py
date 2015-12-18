@@ -19,5 +19,5 @@ def calculateWrappingSize(s):
 for s in data:
     calculateWrappingSize(s)
 
-print 'Paper', paper
-print 'Ribbon', ribbon
+print('Paper', paper)
+print('Ribbon', ribbon)
