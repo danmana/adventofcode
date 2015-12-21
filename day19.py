@@ -45,6 +45,25 @@ def nextMolecules(s):
 
 print('Calibration', len(nextMolecules(medicine)))
 
+# Rn Ar and Y apear only on the right hand side
+# each Rn Ar is a pair and takes one step to undo
+# we can have rules like:
+# z => a b
+# z => a Rn b Ar
+# z => a Rn b Y c Ar
+# z => a Rn b Y c Y d Ar
+
+rnCount = medicine.count('Rn')
+arCount = medicine.count('Ar')
+yCount = medicine.count('Y')
+
+atomsRegex = re.compile('[A-Z][a-z]?')
+atoms = len(atomsRegex.findall(medicine))
+
+print(atoms - rnCount - arCount - 2 * yCount - 1)
+
+
+
 
 # brute forcing it is too slow, need to find a better way
 
