@@ -1,4 +1,4 @@
-import functools
+from itertools import combinations
 
 with open("inputs/day24.txt", "r") as file:
     data = file.readlines()
@@ -58,74 +58,99 @@ def quantum(x):
 # ok, attempt two:
 # try to split the first part, and then just check if the remaining bit can be split
 
-possibilities = []
-a = [False] * n
-# after running it starting with bestSize n, I found that the bestSize is actually 6
-bestSize = 6  # n
+# possibilities = []
+# a = [False] * n
+# # after running it starting with bestSize n, I found that the bestSize is actually 6
+# bestSize = 6  # n
+#
+#
+# def getPossibilities(i, s, size):
+#     global bestSize
+#     global possibilities
+#     global a
+#
+#     if s > w:
+#         return
+#
+#     if size > bestSize:
+#         return
+#
+#     if i == n:
+#         if s == w:
+#             if size < bestSize:
+#                 possibilities = []
+#                 bestSize = size
+#             possibilities.append([i for i in range(n) if a[i]])
+#         return
+#
+#     if s + data[i] > w:
+#         # there is no point going on, the numbers are sorted so we won't find anything smaller than this
+#         return
+#
+#     a[i] = True
+#     getPossibilities(i + 1, s + data[i], size + 1)
+#
+#     a[i] = False
+#     getPossibilities(i + 1, s, size)
+#
+#
+# getPossibilities(0, 0, 0)
+#
+#
+# def cmpSol(a, b):
+#     cmp = len(a) - len(b)
+#     if cmp == 0:
+#         cmp = quantum(a) - quantum(b)
+#     return cmp
+#
+#
+# possibilities.sort(key=functools.cmp_to_key(cmpSol))
+#
+#
+# def canSplit(sol):
+#     a = [data[i] for i in sol]
+#     m = len(a)
+#     K = 2 * w
+#     maxA = a[-1]
+#
+#     p = [[False for j in range(m + 1)] for i in range(w + 1)]
+#
+#     for i in range(m + 1):
+#         p[0][i] = True
+#
+#     for i in range(1, w + 1):
+#         for j in range(1, m + 1):
+#             p[i][j] = p[i][j - 1] or p[i - a[j - 1]][j - 1]
+#
+#     return p[w][m]
+#
+#
+# for sol in possibilities:
+#     if canSplit(sol):
+#         print('Quantum 3', quantum(sol))
+#         break
+
+# attempt 2 works for part 1, but is sooo slow
+
+# attempt 3
+# start with the smallest possible packaging, from left to right
+# since the data is sorted, this guarantees that the first correct packaging is the one with the least quantum
+
+def mul(arr):
+    x = 1
+    for i in arr:
+        x *= i
+    return x
 
 
-def getPossibilities(i, s, size):
-    global bestSize
-    global possibilities
-    global a
-
-    if s > w:
-        return
-
-    if size > bestSize:
-        return
-
-    if i == n:
-        if s == w:
-            if size < bestSize:
-                possibilities = []
-                bestSize = size
-            possibilities.append([i for i in range(n) if a[i]])
-        return
-
-    if s + data[i] > w:
-        # there is no point going on, the numbers are sorted so we won't find anything smaller than this
-        return
-
-    a[i] = True
-    getPossibilities(i + 1, s + data[i], size + 1)
-
-    a[i] = False
-    getPossibilities(i + 1, s, size)
+def pack(w):
+    for i in range(1, n):
+        # combinations returns sublists in the logical increasing order
+        for combo in combinations(data, i):
+            if sum(combo) == w:
+                # apparently the remainder splits evenly in 2 (or 3 for the second problem) ... so we don't need to check it
+                return mul(combo)
 
 
-getPossibilities(0, 0, 0)
-
-
-def cmpSol(a, b):
-    cmp = len(a) - len(b)
-    if cmp == 0:
-        cmp = quantum(a) - quantum(b)
-    return cmp
-
-
-possibilities.sort(key=functools.cmp_to_key(cmpSol))
-
-
-def canSplit(sol):
-    a = [data[i] for i in sol]
-    m = len(a)
-    K = 2 * w
-    maxA = a[-1]
-
-    p = [[False for j in range(m + 1)] for i in range(w + 1)]
-
-    for i in range(m + 1):
-        p[0][i] = True
-
-    for i in range(1, w + 1):
-        for j in range(1, m + 1):
-            p[i][j] = p[i][j - 1] or p[i - a[j - 1]][j - 1]
-
-    return p[w][m]
-
-
-for sol in possibilities:
-    if canSplit(sol):
-        print('Quantum 3', quantum(sol))
-        break
+print('Pack 3', pack(int(total / 3)))
+print('Pack 4', pack(int(total / 4)))
